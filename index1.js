@@ -16,7 +16,8 @@ console.log("players in render:", players);
 const render = () => {
   const html = players.map((player) => {
     return `
-            <div>
+            <div class ="profile">
+                <img class="profileImg" src = "${player.imageUrl}" alt = "${player.name}">
                 <h2 class="pName" data-id="${player.id}">${player.name}</h2>
             </div>
             `;
@@ -26,8 +27,13 @@ const render = () => {
   singlePlayerDiv.innerHTML = singlePlayer
     ? `
   <div>
-    <h2>${singlePlayer.name}</h2>
-    <h2>${singlePlayer.breed}</h2>
+    <h2>Name: ${singlePlayer.name}</h2>
+    <img class="images" src = "${singlePlayer.imageUrl}" alt = "${singlePlayer.name} the ${singlePlayer.breed}">
+    <h3>Breed: ${singlePlayer.breed}</h3>
+    <h3>Status: ${singlePlayer.status}</h3>
+    <h3>TeamID: ${singlePlayer.teamId}</h3>
+
+
     <button class="playerDelete" data-id="${singlePlayer.id}">Delete</button>
   </div>
     `
@@ -56,21 +62,22 @@ allPlayers.addEventListener("click", async (event) => {
     const id = event.target.getAttribute("data-id") * 1;
     console.log(id);
 
-    /*  try {
-    const response = await fetch(
-      "https://fsa-puppy-bowl.herokuapp.com/api/2510-HAYLEY/players/{id}"
-    );
-    const data = await response.json();
-    console.log(data.data);
-    singlePlayer = data.data;
-    render();
-  } catch (error) {
-    console.error(error);*/
-    //I couldnt get try to work so going w find
-    singlePlayer = players.find((player) => {
+    try {
+      const response = await fetch(
+        `https://fsa-puppy-bowl.herokuapp.com/api/2510-HAYLEY/players/${id}`
+      );
+      const json = await response.json();
+      //console.log(data.data);
+      singlePlayer = json.data.player;
+      render();
+    } catch (error) {
+      console.error(error);
+      //I couldnt get try to work so going w find
+      /*    singlePlayer = players.find((player) => {
       return player.id === id;
     });
-    render();
+    render();*/
+    }
   }
 });
 
@@ -90,9 +97,12 @@ addNewPlayerForm.addEventListener("submit", async (event) => {
         body: JSON.stringify(newPlayer),
       }
     );
-    const data = await response.json();
-    players.push(data.data.players);
-    render();
+    if (!response.ok) throw new Error(`creat faied: ${response.status}`);
+    await fetchAllPlayers();
+    addNewPlayerForm.reset();
+    //const data = await response.json();
+    //players.push(data.data.players);
+    //render();
   } catch (error) {
     console.error(error);
   }

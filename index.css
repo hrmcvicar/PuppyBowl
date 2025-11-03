@@ -15,3 +15,29 @@ hr::before {
   color: #555;
   font-size: 1.2em;
 }
+
+.images {
+  width: 5cm;
+}
+
+.profileImg {
+  width: 2cm;
+  border-radius: 20%;
+  margin-right: 15px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: orange dashed 2px;
+  border-radius: 10px;
+  align-items: center;
+  padding: 10px;
+}
+
+#allPlayers {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+}
